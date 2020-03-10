@@ -2,7 +2,7 @@ import pandas as pd
 import datetime
 import os
 import sys
-
+import plotly.graph_objects as go
 
 def get_data_for_day_and_provincia(codice_provincia, day_string):
     data_frame = pd.read_csv(
@@ -20,6 +20,7 @@ def get_all_data_for_provincia(codice_provincia):
     cases = list()
     delta_cases = list()
     provincia = ''
+    date_list = list()
 
     previous_date = None
     for date in date_generated:
@@ -34,6 +35,7 @@ def get_all_data_for_provincia(codice_provincia):
             previous_date_cases = int(data_previous_date['totale_casi'].values[0])
             delta = current_date_cases - previous_date_cases
             delta_cases.append(delta)
+            date_list.append(date)
 
         previous_date = current_date_string
 
@@ -53,11 +55,12 @@ def get_all_data_for_provincia(codice_provincia):
     len_derivate = len(derivate)
     cases = cases[-len_derivate:]
     delta_cases = delta_cases[-len_derivate:]
+    date_list = date_list[-len_derivate:]
 
-    return cases, delta_cases, derivate, provincia
+    return cases, delta_cases, derivate, provincia, date_list
 
 
-def print_data(cases, delta_cases, derivate, provincia):
+def print_data(cases, delta_cases, derivate, provincia, date_list):
     print('Provincia - [%s]' % provincia)
     print(cases)
     print(delta_cases)
@@ -76,7 +79,16 @@ if __name__ == '__main__':
     try:
         codice_provincia = int(sys.argv[1])
         print(codice_provincia)
-        (cases, delta_cases, derivate, provincia) = get_all_data_for_provincia(codice_provincia)
-        print_data(cases, delta_cases, derivate, provincia)
+        (cases, delta_cases, derivate, provincia, date_list) = get_all_data_for_provincia(codice_provincia)
+        print_data(cases, delta_cases, derivate, provincia, date_list)
+        fig = go.Figure(
+            data=[
+                go.Scatter(y=cases, x=date_list, name='Cases'),
+                go.Bar(y=delta_cases, x=date_list, name='Change'),
+                go.Scatter(y=derivate, x=date_list, name='Derivative')
+            ],
+            layout_title_text=provincia
+        )
+        fig.show()
     except IndexError:
         print("No arguments, ERROR!")
