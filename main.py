@@ -3,6 +3,8 @@ import datetime
 import os
 import sys
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 
 def get_data_for_day_and_provincia(codice_provincia, day_string):
     data_frame = pd.read_csv(
@@ -81,14 +83,11 @@ if __name__ == '__main__':
         print(codice_provincia)
         (cases, delta_cases, derivate, provincia, date_list) = get_all_data_for_provincia(codice_provincia)
         print_data(cases, delta_cases, derivate, provincia, date_list)
-        fig = go.Figure(
-            data=[
-                go.Scatter(y=cases, x=date_list, name='Cases'),
-                go.Bar(y=delta_cases, x=date_list, name='Change'),
-                go.Scatter(y=derivate, x=date_list, name='Derivative')
-            ],
-            layout_title_text=provincia
-        )
+        fig = make_subplots(rows=1, cols=2)
+        fig.add_trace(go.Scatter(y=cases, x=date_list, name='Cases'), row=1, col=1)
+        fig.add_trace(go.Bar(y=delta_cases, x=date_list, name='Change'), row=1, col=1)
+        fig.add_trace(go.Scatter(y=derivate, x=date_list, name='Derivative'), row=1, col=2)
+        fig.update_layout(title_text=provincia)
         fig.show()
     except IndexError:
         print("No arguments, ERROR!")
