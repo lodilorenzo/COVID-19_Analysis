@@ -47,15 +47,23 @@ def get_all_data_for_provincia(codice_provincia):
                 pass
 
         previous_delta = delta_case
-    return (cases, delta_cases, derivate, provincia)
+
+    len_derivate = len(derivate)
+    cases = cases[-len_derivate:]
+    delta_cases = delta_cases[-len_derivate:]
+
+    return cases, delta_cases, derivate, provincia
+
+
+def print_data(cases, delta_cases, derivate, provincia):
+    print('Provincia - [%s]' % provincia)
+    print(cases)
+    print(delta_cases)
+    string_to_print = ("[" + ', '.join(['%.2f'] * len(derivate)) + "]") % tuple(derivate)
+    print(string_to_print)
 
 
 if __name__ == '__main__':
     codice_provincia = 36
     (cases, delta_cases, derivate, provincia) = get_all_data_for_provincia(codice_provincia)
-
-    print(provincia)
-    print(delta_cases)
-    print(cases)
-    string_to_print = ("[" + ', '.join(['%.2f'] * len(derivate)) + "]") % tuple(derivate)
-    print(string_to_print)
+    print_data(cases, delta_cases, derivate, provincia)
