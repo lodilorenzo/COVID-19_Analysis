@@ -80,14 +80,22 @@ if __name__ == '__main__':
     update_covid_data()
     try:
         codice_provincia = int(sys.argv[1])
-        print(codice_provincia)
         (cases, delta_cases, derivate, provincia, date_list) = get_all_data_for_provincia(codice_provincia)
-        print_data(cases, delta_cases, derivate, provincia, date_list)
         fig = make_subplots(rows=1, cols=2)
         fig.add_trace(go.Scatter(y=cases, x=date_list, name='Cases'), row=1, col=1)
         fig.add_trace(go.Bar(y=delta_cases, x=date_list, name='Change'), row=1, col=1)
         fig.add_trace(go.Scatter(y=derivate, x=date_list, name='Derivative'), row=1, col=2)
         fig.update_layout(title_text=provincia)
         fig.show()
+
+        codice_provincia = int(sys.argv[2])
+        (cases, delta_cases, derivate, provincia, date_list) = get_all_data_for_provincia(codice_provincia)
+        fig = make_subplots(rows=1, cols=2)
+        fig.add_trace(go.Scatter(y=cases, x=date_list, name='Cases'), row=1, col=1)
+        fig.add_trace(go.Bar(y=delta_cases, x=date_list, name='Change'), row=1, col=1)
+        fig.add_trace(go.Scatter(y=derivate, x=date_list, name='Derivative'), row=1, col=2)
+        fig.update_layout(title_text=provincia)
+        fig.show()
+
     except IndexError:
         print("No arguments, ERROR!")
