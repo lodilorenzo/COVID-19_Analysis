@@ -1,6 +1,7 @@
 import pandas as pd
 import datetime
 import os
+import sys
 
 
 def get_data_for_day_and_provincia(codice_provincia, day_string):
@@ -72,6 +73,10 @@ def update_covid_data():
 
 if __name__ == '__main__':
     update_covid_data()
-    codice_provincia = 36
-    (cases, delta_cases, derivate, provincia) = get_all_data_for_provincia(codice_provincia)
-    print_data(cases, delta_cases, derivate, provincia)
+    try:
+        codice_provincia = int(sys.argv[1])
+        print(codice_provincia)
+        (cases, delta_cases, derivate, provincia) = get_all_data_for_provincia(codice_provincia)
+        print_data(cases, delta_cases, derivate, provincia)
+    except IndexError:
+        print("No arguments, ERROR!")
