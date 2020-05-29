@@ -72,6 +72,9 @@ def print_data(cases, delta_cases, derivate, provincia, date_list):
 
 def update_covid_data():
     os.chdir('COVID-19')
+    os.system('git reset --mixed')
+    os.system('git add *')
+    os.system('git stash')
     os.system('git pull')
     os.chdir('..')
 
